@@ -1,0 +1,85 @@
+---
+title: "Playground"
+icon: "play"
+---
+
+The playground feature in Prompt Foundry lets you experiment with different LLM configurations in real-time. You can compare various OpenAI and Anthropic models, optimize variables, parameters, and message sequences. Additionally, the playground supports advanced features like parallel tool calling and image vision, providing a versatile environment for exploring your prompt ideas.
+
+<Card>
+  <img src="https://media.promptfoundry.ai/playground.gif" />
+</Card>
+
+## Conversation
+
+Prompt Foundry enables interactive conversations with a configured model. This allows you to test various prompt variations or engage in a conversation to observe the model's responses to different inputs before developing your evaluations and deploying the prompt to production.
+
+### Starting a Conversation
+
+To start a new conversation:
+
+1. Enter text in the text area.
+2. Click the "Send" button.
+
+The model will process your input and display a response. You can continue the conversation by inputting new text and sending additional messages using the "Send" button.
+
+<Card>
+  <img src="/features/images/conversation.gif" />
+</Card>
+
+### Running a Prompt
+
+If your prompt configuration uses variables instead of a conversational input:
+
+1. Enter your variables in the variable input field.
+2. Click the "Run" button.
+
+This will trigger the model completion with the provided variables without adding a new conversation message.
+
+<Card>
+  <img src="/features/images/run-conversation.gif" />
+</Card>
+### Clear Conversation
+
+To clear the conversation, click the "Reset all" button. This will clear the conversation history and reset the conversation to the initial state.
+
+## Comparison
+
+Prompt Foundry allows you to compare multiple different prompt configurations side by side.
+This is useful for comparing different parameters or messages with the same model or for comparing different models.
+
+To add a new comparison, click on the "Add Comparison" button in the bottom right corner of the screen.
+
+You can then run each prompt instance individually or run all of them at once by clicking on the "Run All" button in the bottom right corner of the screen.
+
+<Card>
+  <img src="/features/images/comparison.gif" />
+</Card>
+## Tool Call
+
+The playground allows you to mock parallel tool call responses to test the model's behavior when interacting with external tools.
+
+<Card>
+  <img src="/features/images/conversation.gif" />
+</Card>
+## Variables
+
+The playground allows you to set variables to be passed into the prompt messages. This is useful for testing static prompts that take in different variables for each completion.
+
+<Card>
+  <img src="/features/images/run-conversation.gif" />
+</Card>
+## Vision
+
+The playground also allows you to test models that support image vision completions.
+You can upload an image and see how the model responds to your inputted message and the image.
+
+<Card>
+  <img src="/features/images/vision.gif" />
+</Card>
+## JSON
+
+The conversation history supports displaying structured JSON responses from the model. This allows you to clearly see the structure of the response and the different fields that are returned by the model.
+
+<Card>
+  <img src="/features/images/json.gif" />
+</Card>

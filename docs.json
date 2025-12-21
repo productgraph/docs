@@ -40,13 +40,12 @@
         "group": "Features",
         "pages": [
           "features/overview",
-          "features/llm-playground",
-          "features/llm-evaluations",
-          "features/llm-prompt-management",
-          "features/llm-gateway",
-          "features/llm-observability",
-          "features/llm-tools",
-          "features/supported-llm-models"
+          "features/product-artifacts",
+          "features/chat",
+          "features/editor",
+          "features/collaboration",
+          "features/projects",
+          "features/documents"
         ]
       }
     ]

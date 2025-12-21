@@ -31,8 +31,7 @@
         "group": "Quickstart",
         "pages": [
           "quickstart/introduction",
-          "quickstart/getting-started",
-          "quickstart/why-prompt-management",
+          "quickstart/why-product-graph",
           "quickstart/faq"
         ]
       },

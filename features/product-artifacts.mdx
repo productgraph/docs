@@ -8,46 +8,146 @@ Product Artifacts are the building blocks of your product documentation in Produ
 
 ## What are Product Artifacts?
 
-Product Artifacts are structured documents that capture the essential elements of your product—from high-level requirements to detailed specifications. Unlike traditional documents, artifacts are designed to be:
+Product Artifacts are structured documents that capture the essential elements of your product, from high-level strategy to detailed acceptance criteria. Unlike traditional documents, artifacts are designed to be:
 
 - **Structured**: Consistent format that makes information easy to find and parse
-- **Connected**: Link artifacts together to show relationships and dependencies
-- **AI-Ready**: Formatted for seamless integration with AI agents and development tools
+- **Connected**: Clear relationships provide context and let you drill deeper
+- **AI-Ready**: AI agents can read and use your requirements directly
 - **Versioned**: Track changes and maintain history of your product decisions
 
-## Types of Artifacts
+## The Artifact Hierarchy
 
-<CardGroup cols={2}>
-  <Card title="Requirements" icon="list-check">
-    Capture user stories, acceptance criteria, and functional requirements in a
-    structured format.
+Product Graph follows a clear hierarchy that flows from strategy to implementation:
+
+**Product → Capability → Feature → Requirement → Acceptance Criterion**
+
+This hierarchy ensures traceability from high-level product goals down to testable conditions, making it easy for teams and AI agents to understand how each piece connects to the whole.
+
+## Core Artifacts
+
+These artifacts form the primary hierarchy of your product model. They're long-lived and represent the stable structure of what you're building.
+
+### Product
+
+The top-level container that all other core artifacts roll up to. A Product represents the complete offering you're building and defines the boundaries for everything beneath it.
+
+A Product document includes an overview, vision, guiding principles, problem statement, and value proposition.
+
+### Capability
+
+A high-level ability described in problem/outcome terms. Capabilities are stable pillars that last across releases.
+
+Capabilities represent _what_ your product can do, framed around user outcomes rather than implementation. Think of them as the major abilities your product provides. They rarely change and form the stable backbone of your product.
+
+**Parent:** Product (one Product has many Capabilities)
+
+**Example:** "Inbox Organization & Categorization": the ability to automatically organize and categorize incoming emails
+
+### Feature
+
+Concrete, user-facing behavior that realizes part of a Capability. Features are releasable units of functionality.
+
+Features are the specific, tangible things users interact with. While a Capability might last for years, Features are what you ship in a release cycle.
+
+**Parent:** Capability (one Capability has many Features)
+
+**Example:** "Thread Summaries Panel": a specific feature that shows AI-generated summaries of email threads
+
+### Requirement
+
+A formal statement of system behavior (functional or non-functional). Requirements are testable and atomic.
+
+Requirements define exactly what the system must do. Each Requirement captures one atomic behavior. If you find yourself using "and" to connect distinct behaviors, split them into separate Requirements.
+
+**Parent:** Feature (one Feature has many Requirements)
+
+**Example:** "The system must authenticate with Gmail using Google OAuth with read-only and labeling scopes."
+
+### Acceptance Criterion
+
+A testable condition proving a Requirement is met. Each criterion has a clear pass/fail outcome.
+
+Acceptance Criteria define how you'll verify a Requirement is implemented correctly. They use specific, measurable values, never subjective terms like "fast" or "short."
+
+**Parent:** Requirement (one Requirement has many Acceptance Criteria)
+
+**Writing testable criteria:**
+
+| Avoid             | Use instead                        |
+| ----------------- | ---------------------------------- |
+| "loads quickly"   | "completes within 200ms"           |
+| "short message"   | "maximum 50 characters"            |
+| "clearly visible" | "contrast ratio 4.5:1 per WCAG AA" |
+
+**Example:** "Given a message classified as Priority, When the inbox list renders, Then the message row displays a 'Priority' label."
+
+## Supporting Artifacts
+
+These artifacts provide essential context and structure but sit outside the core hierarchy.
+
+<CardGroup cols={3}>
+  <Card title="User Type" icon="user">
+    Long-lived archetypes representing who uses your product: their goals,
+    behaviors, needs, and pain points.
   </Card>
-  <Card title="Specifications" icon="file-lines">
-    Define technical specifications, API contracts, and system behaviors.
+  <Card title="Core Entity" icon="database">
+    Fundamental domain concepts (the "nouns") your system manages. These form
+    your shared vocabulary.
   </Card>
-  <Card title="Decisions" icon="scale-balanced">
-    Document architectural decisions, trade-offs, and the reasoning behind
-    choices.
-  </Card>
-  <Card title="Context" icon="circle-info">
-    Capture business context, user research, and background information.
+  <Card title="Project" icon="calendar">
+    Temporary execution containers with start and end dates for tracking work.
   </Card>
 </CardGroup>
+
+### User Type
+
+User Types represent the different people who use your product. Unlike personas with demographics, User Types focus on behaviors, goals, and constraints that affect how they interact with your product.
+
+**Example:** "Power Emailer": a user who processes hundreds of emails daily and needs aggressive automation and keyboard shortcuts
+
+### Core Entity
+
+Core Entities are the fundamental concepts in your domain, the "nouns" that users and your business naturally speak about. Think of them as vocabulary definitions that create shared understanding across your team.
+
+**Example:** "Email Thread": a conversation consisting of related messages, with states like active, archived, and snoozed
+
+### Project
+
+Projects are temporary containers for execution. They group work that needs to be tracked together and have defined start and end dates.
+
+**Example:** "Q1 Mobile Launch": a project tracking all the work needed to ship the mobile app by end of quarter
+
+## Capability vs Feature
+
+Understanding the difference between Capabilities and Features is essential:
+
+| Capability                            | Feature                            |
+| ------------------------------------- | ---------------------------------- |
+| Stable, lasts for years               | Ships in release cycles            |
+| Described in outcome terms            | Concrete, specific functionality   |
+| "What ability does the product have?" | "What can the user interact with?" |
+| Example: "Inbox Organization"         | Example: "Smart Categories Panel"  |
 
 ## Creating Artifacts
 
 <Steps>
-<Step title="Choose an artifact type">
-  Select the type of artifact that best matches the information you want to capture. Each type has a tailored template to guide your documentation.
+<Step title="Choose the right artifact type">
+  Start at the appropriate level. If you're defining a broad ability, create a Capability. If you're specifying exact system behavior, create a Requirement.
 </Step>
 
 <Step title="Fill in the structure">
-  Use the guided structure to add your content. The AI assistant can help you
-  refine and expand your initial ideas.
+  Use the guided templates for each artifact type. The AI assistant helps you
+  write clear, well-structured content and can identify missing information.
 </Step>
 
-<Step title="Connect related artifacts">
-  Link your artifact to related documents, projects, and other artifacts to build a connected knowledge graph.
+<Step title="Connect to the hierarchy">
+  Link your artifact to its parent. A Feature belongs to a Capability, a
+  Requirement belongs to a Feature, and so on. These connections create
+  traceability.
+</Step>
+
+<Step title="Reference related artifacts">
+  Link to User Types affected by this artifact, Core Entities it involves, or Projects tracking its implementation.
 </Step>
 </Steps>
 
@@ -57,10 +157,11 @@ Product Graph's AI assistant helps you create better artifacts by:
 
 - Suggesting improvements to clarity and completeness
 - Identifying missing requirements or edge cases
-- Generating acceptance criteria from user stories
+- Generating acceptance criteria from requirements
 - Ensuring consistency across your documentation
 
 <Tip>
   Use the AI assistant to transform rough notes into well-structured artifacts.
-  Just paste your ideas and let the AI help organize them.
+  Paste your ideas and let the AI help organize them into the right artifact
+  types.
 </Tip>

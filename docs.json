@@ -65,7 +65,7 @@
     "suggestEdit": true,
     "thumbsRating": true
   },
-  "analytics": {
+  "integrations": {
     "amplitude": {
       "apiKey": "90965b7fc1e534b382263f95318f545e"
     },

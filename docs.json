@@ -66,8 +66,8 @@
     "thumbsRating": true
   },
   "analytics": {
-    "mixpanel": {
-      "projectToken": "cd94ba8260ba06ad30ea47ef7e92d9a8"
+    "amplitude": {
+      "apiKey": "90965b7fc1e534b382263f95318f545e"
     },
     "gtm": {
       "tagId": "GTM-NK5NCVKV"

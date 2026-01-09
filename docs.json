@@ -45,6 +45,12 @@
           "features/documents",
           "features/collaboration"
         ]
+      },
+      {
+        "group": "Demos",
+        "pages": [
+          "demo/new-feature-to-prd"
+        ]
       }
     ]
   },

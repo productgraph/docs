@@ -51,6 +51,12 @@
         "pages": [
           "demo/new-feature-to-prd"
         ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/mcp-server"
+        ]
       }
     ]
   },

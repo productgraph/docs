@@ -1,0 +1,740 @@
+---
+title: "MCP Integration"
+icon: "plug"
+description: "Connect Product Graph to your favorite IDE or AI client using the Model Context Protocol (MCP)"
+---
+
+Product Graph's MCP server lets you securely connect your product knowledge directly to AI coding assistants like Cursor, Claude Code, Windsurf, and more. Access your PRDs, requirements, and product context without leaving your development environment.
+
+## Overview
+
+The Model Context Protocol (MCP) is an open standard that allows AI assistants to securely access external data sources. With Product Graph's MCP integration, you can:
+
+- **Search product artifacts** — Find PRDs, capabilities, features, requirements, and more from your IDE
+- **Read document content** — Pull full context into your coding sessions in markdown format
+- **Create new artifacts** — Build out your product hierarchy directly from your IDE
+- **Edit documents safely** — Apply patch-style edits with full version history and rollback support
+- **Stay in sync** — Always work with the latest product requirements
+
+## MCP Endpoint
+
+Product Graph's MCP server is hosted at:
+
+```
+https://app.productgraph.ai/api/mcp/sse
+```
+
+The server supports multiple transport types:
+
+| Transport | Endpoint | Purpose |
+|-----------|----------|---------|
+| SSE | `/api/mcp/sse` | Server-Sent Events (recommended for most clients) |
+| HTTP | `/api/mcp/mcp` | Streamable HTTP transport |
+
+## Authentication
+
+Product Graph uses **OAuth** for MCP authentication combined with an **organization header** to scope requests to your workspace.
+
+<Steps>
+  <Step title="Add Product Graph to your MCP client">
+    Configure your MCP client with the Product Graph endpoint and your organization ID (see setup instructions below).
+  </Step>
+  <Step title="Authorize access">
+    When prompted, sign in to your Product Graph account and authorize the connection.
+  </Step>
+  <Step title="Start using MCP tools">
+    Once authorized, you'll have access to all Product Graph tools with your existing permissions.
+  </Step>
+</Steps>
+
+### Organization Context
+
+All MCP requests must include the `X-Organization-Id` header with your organization's UUID:
+
+```http
+X-Organization-Id: <your-organization-uuid>
+```
+
+This header scopes all operations to your specific workspace. You can find your organization ID in the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION) in Product Graph.
+
+<Tip>
+Your MCP session inherits your Product Graph permissions—you'll only be able to access artifacts in workspaces you have access to.
+</Tip>
+
+## Supported Clients
+
+<CardGroup cols={3}>
+  <Card title="Cursor" icon="c">
+    Via mcp-remote bridge
+  </Card>
+  <Card title="Claude Code" icon="terminal">
+    CLI with SSE transport
+  </Card>
+  <Card title="Claude Desktop" icon="message-bot">
+    Via mcp-remote bridge
+  </Card>
+  <Card title="Windsurf" icon="wind">
+    Via mcp-remote bridge
+  </Card>
+  <Card title="VS Code" icon="code">
+    Via mcp-remote bridge
+  </Card>
+</CardGroup>
+
+## Get Your Configuration
+
+<Info>
+**Quick Setup from Product Graph**
+
+Open the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION) in Product Graph to get your configuration:
+
+- Use the **one-click install button** for Cursor
+- Copy the **Claude Code CLI command** with your organization ID pre-filled
+- Or copy the full JSON configuration for manual setup
+
+You can also access this anytime by clicking the **MCP** button in the sidebar.
+</Info>
+
+## Client-Specific Setup
+
+<Tabs>
+  <Tab title="Cursor">
+    Add the following to your MCP configuration file at `~/.cursor/mcp.json`:
+
+    ```json
+    {
+      "mcpServers": {
+        "product-graph": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-remote",
+            "https://app.productgraph.ai/api/mcp/sse",
+            "--header",
+            "X-Organization-Id: YOUR_ORGANIZATION_ID"
+          ]
+        }
+      }
+    }
+    ```
+
+    Replace `YOUR_ORGANIZATION_ID` with your organization UUID from the MCP Connection modal.
+
+    Restart Cursor, and you'll be prompted to authorize Product Graph when first connecting.
+
+    <Tip>
+    Use the **one-click install** from the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION) to automatically configure Cursor with your organization ID.
+    </Tip>
+  </Tab>
+
+  <Tab title="Claude Code">
+    Run the following command in your terminal:
+
+    ```bash
+    claude mcp add --transport sse product-graph https://app.productgraph.ai/api/mcp/sse --header "X-Organization-Id: YOUR_ORGANIZATION_ID"
+    ```
+
+    Replace `YOUR_ORGANIZATION_ID` with your organization UUID.
+
+    You'll be prompted to authorize Product Graph in your browser.
+
+    <Tip>
+    Copy the ready-to-use command from the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION)—it has your organization ID pre-filled.
+    </Tip>
+  </Tab>
+
+  <Tab title="Claude Desktop">
+    Edit your Claude Desktop configuration file:
+    - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+    Add the following to the `mcpServers` section:
+
+    ```json
+    {
+      "mcpServers": {
+        "product-graph": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-remote",
+            "https://app.productgraph.ai/api/mcp/sse",
+            "--header",
+            "X-Organization-Id: YOUR_ORGANIZATION_ID"
+          ]
+        }
+      }
+    }
+    ```
+
+    Replace `YOUR_ORGANIZATION_ID` with your organization UUID.
+
+    Restart Claude Desktop. You'll be prompted to authorize Product Graph when first connecting.
+
+    <Note>
+    Requires Node.js installed for the `npx` command.
+    </Note>
+  </Tab>
+
+  <Tab title="Windsurf">
+    Add the following to your Windsurf MCP configuration:
+
+    ```json
+    {
+      "mcpServers": {
+        "product-graph": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-remote",
+            "https://app.productgraph.ai/api/mcp/sse",
+            "--header",
+            "X-Organization-Id: YOUR_ORGANIZATION_ID"
+          ]
+        }
+      }
+    }
+    ```
+
+    Replace `YOUR_ORGANIZATION_ID` with your organization UUID.
+
+    You'll be prompted to authorize Product Graph when first connecting.
+
+    <Note>
+    Requires Node.js installed for the `npx` command.
+    </Note>
+  </Tab>
+
+  <Tab title="VS Code">
+    Add the following to your `settings.json`:
+
+    ```json
+    {
+      "mcp": {
+        "servers": {
+          "product-graph": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "mcp-remote",
+              "https://app.productgraph.ai/api/mcp/sse",
+              "--header",
+              "X-Organization-Id: YOUR_ORGANIZATION_ID"
+            ]
+          }
+        }
+      }
+    }
+    ```
+
+    Replace `YOUR_ORGANIZATION_ID` with your organization UUID.
+
+    You'll be prompted to authorize Product Graph when first connecting.
+  </Tab>
+</Tabs>
+
+## Available MCP Tools
+
+Once connected, you'll have access to **31 tools** in your AI assistant. All tools use the `pg_` prefix for easy identification.
+
+### Search Tool
+
+<AccordionGroup>
+  <Accordion title="pg_search" icon="magnifying-glass">
+    Search across all product artifacts in your workspace by title or content.
+
+    **Parameters:**
+    <ParamField query="query" type="string" required>
+      Search query text to find relevant artifacts
+    </ParamField>
+    <ParamField query="artifactTypes" type="string[]">
+      Filter by artifact types: `product`, `capability`, `feature`, `requirement`, `acceptance_criterion`, `user_type`, `core_entity`, `page`
+    </ParamField>
+    <ParamField query="limit" type="number" default="10">
+      Maximum number of results to return (1-50)
+    </ParamField>
+
+    **Returns:** Ranked results with ID, type, title, preview, URL, and relevance score.
+
+    **Example usage:**
+    ```
+    Search for authentication requirements in Product Graph
+    ```
+
+  </Accordion>
+</AccordionGroup>
+
+### Read Tools
+
+All read tools support a `mode` parameter:
+- `concise` (default): Returns a truncated preview (~500 chars)
+- `full`: Returns complete content
+
+<AccordionGroup>
+  <Accordion title="pg_read_product" icon="box">
+    Read the Product document for your organization. The Product is the root artifact containing vision, goals, and high-level product information.
+
+    **Parameters:**
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_capability" icon="puzzle-piece">
+    Read a Capability document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="capabilityId" type="string" required>
+      Capability UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_feature" icon="star">
+    Read a Feature document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="featureId" type="string" required>
+      Feature UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_requirement" icon="clipboard-check">
+    Read a Requirement document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="requirementId" type="string" required>
+      Requirement UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_acceptance_criterion" icon="check-double">
+    Read an Acceptance Criterion document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="acceptanceCriterionId" type="string" required>
+      Acceptance Criterion UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_user_type" icon="user">
+    Read a User Type document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="userTypeId" type="string" required>
+      User Type UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_core_entity" icon="database">
+    Read a Core Entity document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="coreEntityId" type="string" required>
+      Core Entity UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_read_page" icon="file-lines">
+    Read a Page document content in markdown format.
+
+    **Parameters:**
+    <ParamField query="pageId" type="string" required>
+      Page UUID to read
+    </ParamField>
+    <ParamField query="mode" type="string" default="concise">
+      `concise` for preview, `full` for complete content
+    </ParamField>
+
+  </Accordion>
+</AccordionGroup>
+
+### List Tools
+
+<AccordionGroup>
+  <Accordion title="pg_list_capabilities" icon="list">
+    List all Capabilities under the Product.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_features" icon="list">
+    List all Features under a Capability.
+
+    **Parameters:**
+    <ParamField query="capabilityId" type="string" required>
+      Parent Capability UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_requirements" icon="list">
+    List all Requirements under a Feature.
+
+    **Parameters:**
+    <ParamField query="featureId" type="string" required>
+      Parent Feature UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_acceptance_criteria" icon="list">
+    List all Acceptance Criteria under a Requirement.
+
+    **Parameters:**
+    <ParamField query="requirementId" type="string" required>
+      Parent Requirement UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_user_types" icon="list">
+    List all User Types under the Product.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_core_entities" icon="list">
+    List all Core Entities under the Product.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_list_pages" icon="list">
+    List all Pages in the workspace.
+
+    **Parameters:**
+    <ParamField query="folderId" type="string">
+      Optional folder UUID to filter pages by folder
+    </ParamField>
+
+  </Accordion>
+</AccordionGroup>
+
+### Create Tools
+
+<AccordionGroup>
+  <Accordion title="pg_create_capability" icon="plus">
+    Create a new Capability under the Product. The Capability will be initialized with a default document template.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID where the Capability should be created
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_feature" icon="plus">
+    Create a new Feature under a Capability. The Feature will be initialized with a default document template.
+
+    **Parameters:**
+    <ParamField query="capabilityId" type="string" required>
+      Parent Capability UUID where the Feature should be created
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_requirement" icon="plus">
+    Create a new Requirement under a Feature. The Requirement will be initialized with a default document template.
+
+    **Parameters:**
+    <ParamField query="featureId" type="string" required>
+      Parent Feature UUID where the Requirement should be created
+    </ParamField>
+    <ParamField query="type" type="string" default="FUNCTIONAL">
+      Requirement type: `FUNCTIONAL` (behaviors), `NON_FUNCTIONAL` (qualities), `CONSTRAINT` (limits), `BUSINESS_RULE` (policies)
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_acceptance_criterion" icon="plus">
+    Create a new Acceptance Criterion under a Requirement. The Acceptance Criterion will be initialized with a Given-When-Then template.
+
+    **Parameters:**
+    <ParamField query="requirementId" type="string" required>
+      Parent Requirement UUID where the Acceptance Criterion should be created
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_user_type" icon="plus">
+    Create a new User Type under the Product. The User Type will be initialized with a default template.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID where the User Type should be created
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_core_entity" icon="plus">
+    Create a new Core Entity under the Product. The Core Entity will be initialized with a default template.
+
+    **Parameters:**
+    <ParamField query="productId" type="string" required>
+      Parent Product UUID where the Core Entity should be created
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_create_page" icon="plus">
+    Create a new Page in the workspace. The Page will be initialized with an empty document.
+
+    **Parameters:**
+    <ParamField query="folderId" type="string">
+      Optional folder UUID to place the page in. If not provided, page will be created at root level.
+    </ParamField>
+
+  </Accordion>
+</AccordionGroup>
+
+### Edit Tools
+
+All edit tools use a **unified diff patch format** to make precise, reviewable changes to documents. Changes are tracked in version history and can be reviewed or rolled back in the Product Graph UI.
+
+
+<AccordionGroup>
+  <Accordion title="pg_edit_capability" icon="pen">
+    Edit a Capability document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="capabilityId" type="string" required>
+      Capability UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_feature" icon="pen">
+    Edit a Feature document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="featureId" type="string" required>
+      Feature UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_requirement" icon="pen">
+    Edit a Requirement document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="requirementId" type="string" required>
+      Requirement UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_acceptance_criterion" icon="pen">
+    Edit an Acceptance Criterion document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="acceptanceCriterionId" type="string" required>
+      Acceptance Criterion UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_user_type" icon="pen">
+    Edit a User Type document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="userTypeId" type="string" required>
+      User Type UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_core_entity" icon="pen">
+    Edit a Core Entity document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="coreEntityId" type="string" required>
+      Core Entity UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+
+  <Accordion title="pg_edit_page" icon="pen">
+    Edit a Page document using a unified diff patch.
+
+    **Parameters:**
+    <ParamField query="pageId" type="string" required>
+      Page UUID to edit
+    </ParamField>
+    <ParamField query="patch" type="string" required>
+      Unified diff patch to apply
+    </ParamField>
+
+  </Accordion>
+</AccordionGroup>
+
+
+## Example Workflows
+
+### Pull PRD context into your IDE
+
+When implementing a feature, ask your AI assistant to fetch the relevant requirements:
+
+```
+Search for the checkout flow feature and read its requirements
+```
+
+### Navigate the product hierarchy
+
+Explore your product structure from the IDE:
+
+```
+Read the product to get the productId, then list all capabilities
+```
+
+### Create new artifacts from your IDE
+
+Quickly scaffold new product artifacts:
+
+```
+Create a new feature under capability xyz789 for user notifications
+```
+
+### Verify implementation against requirements
+
+After writing code, validate it matches the spec:
+
+```
+Read the acceptance criteria for requirement def456 and check if my implementation covers all cases
+```
+
+### Make safe edits to requirements
+
+Update specifications with tracked changes:
+
+```
+Read requirement abc123, then update the acceptance criteria to include error handling
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Missing X-Organization-Id header">
+  - Ensure your MCP configuration includes the `--header` argument with your organization ID
+  - Copy the configuration from the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION) which includes your organization ID
+  - Verify the organization ID is a valid UUID format
+  </Accordion>
+  <Accordion title="User is not a member of this organization">
+  - The organization ID in your configuration doesn't match a workspace you have access to
+  - Get the correct organization ID from the [MCP Connection modal](https://app.productgraph.ai?modal=MCP_CONNECTION) in Product Graph
+  - Ensure you're signed in to the same Product Graph account you authorized with
+  </Accordion>
+  <Accordion title="Authentication errors (401 Unauthorized)">
+  - Re-authorize Product Graph by removing and re-adding the MCP connection
+  - Ensure you're signed in to the correct Product Graph account
+  - Your OAuth session may have expired—reconnecting will refresh it
+  </Accordion>
+  <Accordion title="MCP client not connecting">
+  - Verify the endpoint URL is correct: `https://app.productgraph.ai/api/mcp/sse`
+  - Ensure Node.js is installed (required for `npx mcp-remote`)
+  - Check that your client's MCP configuration is valid JSON
+  - Try restarting your IDE after configuration changes
+  </Accordion>
+  <Accordion title="OAuth authorization not appearing">
+  - Check that popups aren't blocked in your browser
+  - Try manually opening the authorization URL if provided
+  - Restart your MCP client and try connecting again
+  </Accordion>
+  <Accordion title="Tools not appearing">
+  - Restart your MCP client after configuration
+  - Verify the JSON syntax is correct (no trailing commas)
+  - Check your client's MCP logs for error messages
+  - Ensure you've completed the OAuth authorization flow
+  </Accordion>
+
+  <Accordion title="Artifact not found errors">
+  - Verify the artifact ID is a valid UUID
+  - Ensure the artifact exists in your organization
+  - Check that your account has access to the workspace containing the artifact
+  </Accordion>
+</AccordionGroup>
+
+## Security
+
+<Info>
+Product Graph's MCP integration follows security best practices:
+
+- **HTTPS only** — All connections use secure TLS transport
+- **OAuth authentication** — Industry-standard OAuth 2.0 with secure token handling
+- **Organization scoping** — All operations are scoped to your organization via the `X-Organization-Id` header
+- **Permission parity** — MCP operations use the same permissions as the Product Graph UI
+- **Membership validation** — Server validates that you are a member of the specified organization
+- **Audit trail** — All changes are tracked in version history with full attribution
+- **No credential storage** — OAuth tokens are managed by your MCP client, not stored in config files
+
+</Info>
+
+## Version History & Rollback
+
+All changes made through MCP are fully auditable:
+
+- **Tracked changes** — Edit operations create tracked changes visible in the Product Graph UI
+- **Attribution** — All changes are attributed to your user account
+- **Version history** — View the complete history of changes to any document
+- **Rollback support** — Restore previous versions through the Product Graph UI
+
+## Resources
+
+- [Model Context Protocol Specification](https://modelcontextprotocol.io/)
+- [Cursor MCP Documentation](https://docs.cursor.com/context/model-context-protocol)
+- [Claude Code MCP Documentation](https://docs.anthropic.com/en/docs/claude-code/mcp)
+- [mcp-remote](https://www.npmjs.com/package/mcp-remote) — SSE bridge for MCP clients

@@ -1,0 +1,354 @@
+---
+title: "Onboard an Existing Product"
+icon: "truck-ramp-box"
+description: "Build structured product documentation from your codebase using the Product Graph MCP"
+---
+
+Most products have far more code than documentation. When your docs are sparse, outdated, or scattered across forgotten wikis, the Product Graph MCP can analyze your codebase to build a structured [Product Artifact hierarchy](/features/product-artifacts):
+
+
+The MCP connects directly to your IDE or AI assistant, letting you discover capabilities from code structure, extract features from routes and components, and generate documentation from your codebase itself.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Set up MCP integration">
+    Follow the [MCP Integration guide](/guides/mcp-server) to connect Product Graph to your IDE or AI assistant.
+  </Step>
+  <Step title="Access your codebase">
+    Ensure your AI assistant can read your codebase. In Cursor or similar tools, simply open your project.
+  </Step>
+</Steps>
+
+## Mapping Code to Artifacts
+
+| Artifact | Code Pattern |
+|----------|--------------|
+| **Product** | README, root architecture, rollup of capabilities |
+| **Capabilities** | Feature directories, services |
+| **Features** | Routes, components |
+| **Requirements** | Validation logic, business rules |
+| **Acceptance Criteria** | Test files |
+| **Core Entities** | Database models, types |
+
+## Best Practices
+
+- **Start small**: Begin with one capability, validate the workflow, then expand
+- **Review AI output**: The AI may combine concepts that should be separate or miss edge cases
+- **Get approval first**: Ask the AI to summarize proposed changes before executing
+- **Iterate**: Create structure first with basic content, then enrich over time
+
+## Workflow
+
+Each prompt follows the same workflow:
+
+<Steps>
+  <Step title="Understand the Template">
+    The AI retrieves the artifact template from Product Graph to learn what information is required.
+  </Step>
+  <Step title="Discover">
+    The AI analyzes your codebase for relevant information based on the artifact type.
+  </Step>
+  <Step title="Pull Existing Data">
+    The AI fetches any existing artifacts from Product Graph to avoid duplicates.
+  </Step>
+  <Step title="Reconcile">
+    The AI creates a matrix comparing what it found in code vs. what exists in Product Graph, identifying additions, updates, and removals.
+  </Step>
+  <Step title="Approval">
+    You review the reconciliation matrix and approve before any changes are made.
+  </Step>
+</Steps>
+
+## Prompts
+
+### Product
+
+```markdown
+# Product Artifact Generation
+
+## Objective
+Analyze the codebase for <product-name>, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Product artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for product information:
+- README and root-level documentation
+- Directory structure and architecture
+- Problem solved and target users
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch the current Product artifact.
+
+### Phase 4: Reconciliation
+Create a matrix comparing discovered vs existing content:
+
+| Section | In Code | In Graph | Action | Evidence |
+|---------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | README.md |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ⚠️ | ✅ | **UPDATE** | Changed in code |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before updating the Product artifact.
+```
+
+### Capabilities
+
+```markdown
+# Capability Discovery
+
+## Objective
+Analyze the codebase to identify capabilities for <product-name>, reconcile with existing Product Graph data, and propose a capability map.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Capability artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for capabilities:
+- Feature directories and service modules
+- API routes and entry points
+- README and documentation references
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current capabilities.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| Capability | In Code | In Graph | Action | Evidence |
+|------------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | src/auth/ |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating capabilities.
+```
+
+### Features
+
+```markdown
+# Feature Extraction
+
+## Objective
+Extract features for the <capability-name> capability, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Feature artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for features under <capability-name>:
+- Routes, components, and handlers
+- User-facing functionality
+- Code references
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current features for <capability-name>.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| Feature | In Code | In Graph | Action | Evidence |
+|---------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | src/routes/... |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating features.
+```
+
+### Requirements
+
+```markdown
+# Requirement Generation
+
+## Objective
+Generate requirements for the <feature-name> feature, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Requirement artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for requirements under <feature-name>:
+- Validation logic, conditionals, and business rules
+- Error handling and edge cases
+- Performance or security patterns
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current requirements for <feature-name>.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| Requirement | In Code | In Graph | Action | Evidence |
+|-------------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | src/validation/... |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating requirements.
+```
+
+### Acceptance Criteria
+
+```markdown
+# Acceptance Criteria Generation
+
+## Objective
+Create acceptance criteria for requirement <requirement-id>, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Acceptance Criteria artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for acceptance criteria under <requirement-id>:
+- Test files and assertions
+- Edge cases and error handling
+- Happy path, boundary, and failure scenarios
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current acceptance criteria for <requirement-id>.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| Acceptance Criteria | In Code | In Graph | Action | Evidence |
+|---------------------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | tests/... |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating acceptance criteria.
+```
+
+### Core Entities
+
+```markdown
+# Core Entity Discovery
+
+## Objective
+Identify core entities for <product-name>, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the Core Entity artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for core entities:
+- Database schemas and migrations
+- TypeScript interfaces and type definitions
+- Validation schemas
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current core entities.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| Core Entity | In Code | In Graph | Action | Evidence |
+|-------------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | src/models/... |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating core entities.
+```
+
+### User Types
+
+```markdown
+# User Type Identification
+
+## Objective
+Identify user types for <product-name>, reconcile with existing Product Graph data, and propose updates.
+
+**Important:** Do not modify Product Graph without explicit user approval.
+
+---
+
+## Workflow
+
+### Phase 1: Understand the Template
+Use the Product Graph MCP to pull the User Type artifact template and understand the required information.
+
+### Phase 2: Discovery
+Analyze the repository for user types:
+- Auth roles, permissions, and user models
+- UI patterns and feature access controls
+- Different workflows for different user categories
+
+### Phase 3: Pull Existing Data
+Use the Product Graph MCP to fetch current user types.
+
+### Phase 4: Reconciliation
+Create a matrix:
+
+| User Type | In Code | In Graph | Action | Evidence |
+|-----------|---------|----------|--------|----------|
+| Example 1 | ✅ | ❌ | **ADD** | src/auth/... |
+| Example 2 | ✅ | ✅ | **KEEP** | - |
+| Example 3 | ❌ | ✅ | **REMOVE** | Deprecated |
+
+---
+
+**Approval Required:** Present the reconciliation matrix and wait for approval before creating user types.
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="MCP Integration" href="/guides/mcp-server" icon="plug">
+    Full reference for all MCP tools and configuration options.
+  </Card>
+  <Card title="Product Artifacts" href="/features/product-artifacts" icon="cube">
+    Deep dive into each artifact type and best practices.
+  </Card>
+</CardGroup>

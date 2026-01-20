@@ -55,7 +55,8 @@
       {
         "group": "Guides",
         "pages": [
-          "guides/mcp-server"
+          "guides/mcp-server",
+          "guides/onboard-existing-product"
         ]
       }
     ]
